@@ -49,5 +49,11 @@ NPU 내에서 데이터의 흐름을 제어하고 연산 자원을 할당하기 
 ![Step 3 Waveform](./images/step3_waveform.png)
 - `load=1` 구간에서는 데이터가 클럭 에지에 맞춰 동기화되어 저장되는 것을 확인했습니다.
 - `load=0` 구간에서는 입력 데이터가 변경되어도 출력값이 유지되는 **기억 소자(Memory Element)**의 동작을 검증했습니다.
-## 🛠️ Upcoming Milestones
-- [ ] **Step 4:** Simple FSM (명령어 제어 로직 기초)
+
+## 🟡 Step 4: Finite State Machine (FSM) Controller
+NPU의 연산 사이클(Idle-Compute-Done)을 제어하는 상태 머신을 설계했습니다. 
+- **Control Logic:** `start` 신호에 따른 상태 전이 및 `busy` 플래그 생성을 검증했습니다.
+- **Insight:** 하드웨어가 정해진 순서에 따라 명령을 실행하는 '흐름 제어'의 원리를 체득했습니다.
+
+
+
