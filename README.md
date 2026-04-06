@@ -50,10 +50,25 @@ NPU 내에서 데이터의 흐름을 제어하고 연산 자원을 할당하기 
 - `load=1` 구간에서는 데이터가 클럭 에지에 맞춰 동기화되어 저장되는 것을 확인했습니다.
 - `load=0` 구간에서는 입력 데이터가 변경되어도 출력값이 유지되는 **기억 소자(Memory Element)**의 동작을 검증했습니다.
 
-## 🟡 Step 4: Finite State Machine (FSM) Controller
-NPU의 연산 사이클(Idle-Compute-Done)을 제어하는 상태 머신을 설계했습니다. 
-- **Control Logic:** `start` 신호에 따른 상태 전이 및 `busy` 플래그 생성을 검증했습니다.
-- **Insight:** 하드웨어가 정해진 순서에 따라 명령을 실행하는 '흐름 제어'의 원리를 체득했습니다.
+## 🟡 Step 4: FSM(Finite State Machine) Controller 설계
+NPU의 하드웨어 자원(ALU, Register, Memory)이 정해진 순서에 따라 유기적으로 움직이도록 제어하는 **'디지털 지휘관'**을 설계했습니다. 
 
+### 1. 설계 목표 및 상태도(State Diagram)
+단순한 조합 회로를 넘어, 하드웨어가 현재 어떤 작업 중인지 '상태'를 기억하고 다음 동작을 결정하는 FSM을 구축했습니다.
+- **IDLE (00):** 초기 상태. `start` 신호 대기.
+- **COMPUTE (01):** 실제 연산이 이루어지는 구간. `busy` 플래그를 `High`로 출력하여 외부 접근 차단.
+- **DONE (10):** 연산 완료 및 결과 보고. 이후 자동으로 `IDLE` 복귀.
 
+### 2. 주요 설계 포인트
+- **Two-always Block 구조:** 상태 전이(Sequential)와 다음 상태 결정(Combinational) 로직을 분리하여 설계의 가독성과 합성 효율을 높였습니다.
+- **Control Signal:** `busy` 출력을 통해 소프트웨어(Compiler)가 하드웨어의 상태를 확인하고 명령을 보낼 타이밍을 결정하는 **Handshaking**의 기초를 구현했습니다.
+
+### 3. 시뮬레이션 및 파형 분석
+![Step 4 Waveform](./images/step4_waveform.png)
+
+- **Synchronous Transition:** 모든 상태 변화가 `clk`의 Rising Edge에서 정확히 발생하는 것을 확인했습니다.
+- **Trigger Logic:** `start` 신호가 입력된 직후 클럭에서 `IDLE → COMPUTE`로 전이되며 제어 로직이 기동됨을 검증했습니다.
+- **Output Validation:** `current_state`가 `01(COMPUTE)`인 구간에서만 `busy` 신호가 활성화되어 제어 신호와 상태가 완벽히 동기화됨을 확인했습니다.
+
+---
 
