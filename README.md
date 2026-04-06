@@ -39,7 +39,23 @@ Icarus Verilog를 이용해 설계된 로직의 타이밍 동작을 검증했습
 
 ---
 
+## 🔵 Step 2: Sequential Logic & Timing Synchronization
+조합 회로에 '시간(Clock)' 개념을 도입하여 데이터를 저장하고 흐름을 제어하는 순차 회로를 설계했습니다. 이는 NPU 파이프라인 설계의 핵심 기반이 됩니다.
+
+### 1. D-FlipFlop (D-FF)
+- **Concept:** 입력 데이터($D$)를 즉시 출력하지 않고, 클럭의 상승 에지(Rising Edge) 순간에만 샘플링하여 출력($Q$)으로 전달하는 최소 기억 소자입니다.
+- **Role in NPU:** - 각 연산 단계 사이에서 데이터를 유지(Hold)하는 역할을 합니다.
+  - 컴파일러가 계산하는 **'1-Cycle Latency'**가 물리적으로 발생하는 지점입니다.
+
+### 2. 시뮬레이션 및 파형 분석 (Timing Verification)
+![Step 2 Waveform](./images/step2_waveform.png)
+
+- **Clock Synchronous Behavior:** `d` 신호가 아무리 무질서하게 변해도, `q`는 반드시 `clk`의 상승 에지에서만 값을 업데이트하는 **동기식 동작**을 확인했습니다.
+- **Latency Observation:** 입력이 들어온 뒤 다음 클럭 박자가 올 때까지 출력이 대기하는 과정을 통해, 하드웨어 스케줄링에서 왜 '타이밍 정렬(Timing Alignment)'이 중요한지 검증했습니다.
+- **Reset Logic:** `rst_n` (Active Low) 신호 활성화 시, 클럭과 관계없이 출력이 즉시 `0`으로 초기화되는 안정성을 확인했습니다.
+
+---
+
 ## 🛠️ Upcoming Milestones
-- [ ] **Step 2:** Sequential Logic - 클럭(Clock) 도입 및 Latency 제어 (D-FF, Register)
-- [ ] **Step 3:** Quantized Multiplier - Fixed-point Scaling 및 Rounding 로직 구현
-- [ ] **Step 4:** PE(Processing Element) Array - 시스톨릭 어레이 구조 설계
+- [ ] **Step 3:** 8-bit Register & Counter (데이터 묶음 처리 및 상태 제어)
+- [ ] **Step 4:** Simple FSM (Finite State Machine) - 명령어 제어 로직 기초
