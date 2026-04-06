@@ -36,6 +36,18 @@ NPU 내에서 데이터의 흐름을 제어하고 연산 자원을 할당하기 
 
 ---
 
+## 🟣 Step 3: 8-bit Register & Data Persistence
+1-bit D-FF을 확장하여 NPU의 가중치(Weight)나 연산 결과값을 저장할 수 있는 8-bit 레지스터를 설계했습니다.
+
+### 1. 주요 기능 및 모듈
+- **8-bit Register with Load Enable:**
+  - **Load Signal:** 단순 저장 기능을 넘어, 제어 신호(`load`)가 활성화된 시점에만 데이터를 갱신합니다.
+  - **Data Retention:** `load`가 비활성화 상태일 때는 클럭이 유입되어도 기존 데이터를 유지(Hold)합니다.
+- **Insight:** 하드웨어가 명령(Instruction)에 따라 특정 시점에만 데이터를 업데이트하는 제어 논리를 이해했습니다.
+
+### 2. 시뮬레이션 결과
+![Step 3 Waveform](./images/step3_waveform.png)
+- `load=1` 구간에서는 데이터가 클럭 에지에 맞춰 동기화되어 저장되는 것을 확인했습니다.
+- `load=0` 구간에서는 입력 데이터가 변경되어도 출력값이 유지되는 **기억 소자(Memory Element)**의 동작을 검증했습니다.
 ## 🛠️ Upcoming Milestones
-- [ ] **Step 3:** 8-bit Register & Counter (데이터 묶음 처리)
 - [ ] **Step 4:** Simple FSM (명령어 제어 로직 기초)
