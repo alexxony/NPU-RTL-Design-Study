@@ -72,3 +72,15 @@ NPU의 하드웨어 자원(ALU, Register, Memory)이 정해진 순서에 따라 
 
 ---
 
+## 🔴 Step 5: ALU & Control Logic Integration
+FSM 제어 로직과 8-bit 산술 연산기(ALU)를 통합하여 실제 연산이 가능한 모듈을 설계했습니다.
+
+### 1. 주요 기능
+- **Instruction-like Control:** `ctrl_op` 신호를 통해 덧셈(Add)과 뺄셈(Sub) 연산을 선택적으로 수행합니다.
+- **State-based Computation:** 무작정 연산하지 않고, FSM이 `COMPUTE` 상태일 때만 연산 결과를 업데이트하여 전력 소모를 최적화하고 데이터의 안정성을 확보했습니다.
+
+### 2. 시뮬레이션 분석
+![Step 5 Waveform](./images/step5_waveform.png)
+- **Calculation Timing:** `start` 신호 인가 후 다음 클럭에서 연산 결과가 `result` 레지스터에 안착하고, `done` 신호가 발생하는 타이밍을 검증했습니다.
+- **Operational Accuracy:** 8-bit 정수 연산 범위 내에서 가감산 결과의 정확성을 확인했습니다.
+
