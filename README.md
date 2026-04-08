@@ -97,3 +97,16 @@ NPU 연산의 핵심인 곱셈-누산기(MAC)를 설계했습니다.
 ![Step 6 Waveform](./images/step6_waveform.png)
 - **Cumulative Sum:** 매 클럭마다 입력된 `w`와 `in`의 곱이 `acc_out`에 누적되어 더해지는 과정을 검증했습니다.
 - **Bit Width:** 8비트 곱셈의 합산 과정에서 데이터 넘침(Overflow)을 방지하기 위해 16비트 출력폭을 확보했습니다.
+
+## 🔵 Step 7: Memory (SRAM) 설계
+NPU 연산에 필요한 대량의 가중치와 데이터를 저장할 수 있는 SRAM 구조를 설계했습니다.
+
+### 1. 설계 특징
+- **Memory Array:** 8-bit 데이터 폭을 가진 16개의 저장 공간을 할당했습니다.
+- **Synchronous Read/Write:** 모든 메모리 접근을 클럭에 동기화하여 데이터의 안정성을 확보했습니다.
+- **Control:** `wr_en` 신호를 통해 읽기(Read)와 쓰기(Write) 동작을 명확히 분리했습니다.
+
+### 2. 시뮬레이션 분석
+![Step 7 Waveform](./images/step7_waveform.png)
+- 특정 주소(Address)에 데이터를 쓰고, 다시 해당 주소를 호출했을 때 올바른 데이터가 출력되는지 검증했습니다.
+- **Latency:** 쓰기 동작 직후 읽기 모드에서 데이터가 출력되기까지 1-Cycle의 지연이 발생하는 하드웨어 특성을 확인했습니다.
