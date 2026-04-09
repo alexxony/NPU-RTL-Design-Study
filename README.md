@@ -110,3 +110,14 @@ NPU 연산에 필요한 대량의 가중치와 데이터를 저장할 수 있는
 ![Step 7 Waveform](./images/step7_waveform.png)
 - 특정 주소(Address)에 데이터를 쓰고, 다시 해당 주소를 호출했을 때 올바른 데이터가 출력되는지 검증했습니다.
 - **Latency:** 쓰기 동작 직후 읽기 모드에서 데이터가 출력되기까지 1-Cycle의 지연이 발생하는 하드웨어 특성을 확인했습니다.
+
+## 🔴 Step 7: Memory (Register File) 설계
+NPU 연산에 필요한 가중치와 중간 결과값을 주소 기반으로 관리하는 메모리 모듈을 설계했습니다.
+
+### 1. 설계 포인트
+- **Address-based Access:** 3-bit 주소선을 통해 총 8개의 데이터 슬롯에 접근 가능합니다.
+- **Synchronous Write / Asynchronous Read:** 데이터 저장은 클럭에 동기화하여 안정성을 확보하고, 읽기는 주소 입력 즉시 출력이 나오도록 설계하여 접근 속도를 높였습니다.
+
+### 2. 시뮬레이션 결과
+![Step 7 Waveform](./images/step7_waveform.png)
+- 특정 주소에 저장한 데이터가 `we` 신호 해제 후에도 유실되지 않고 정확히 읽히는 것을 확인했습니다.
