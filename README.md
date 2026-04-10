@@ -136,3 +136,33 @@ NPU 연산에 필요한 가중치와 중간 결과값을 주소 기반으로 관
 - **이슈:** 초기 테스트 시 `load` 신호가 너무 짧아(10ns), 데이터가 PE0에만 머물고 PE1까지 전달되지 않는 현상이 발견되었습니다.
 - **해결:** 테스트벤치에서 `load` 신호를 한 박자 더 유지(20ns)하도록 수정하여, PE1이 복도(`d_pass`)에 나온 데이터를 안정적으로 낚아챌 수 있도록 조치했습니다.
 - **검증:** `acc0`은 45ns에, `acc1`은 55ns에 첫 결과값을 출력하며 데이터가 순차적으로 처리됨을 완벽히 검증했습니다.
+
+---
+
+## 🏁 Step 10: Simple NPU Core Integration (Project Completed)
+NPU의 하드웨어 부품들을 하나로 통합하고, 이를 제어하는 **FSM(Finite State Machine)** 기반의 컨트롤러를 설계하여 프로젝트를 최종 완성했습니다.
+
+### 1. NPU Core Architecture
+본 코어는 다음과 같은 계층 구조로 설계되었습니다:
+- **Top Level:** `npu_core.v` (Control Unit + Data Path)
+- **Execution Unit:** `npu_array_1x2.v` (Systolic Array)
+- **Processing Element:** `npu_pe.v` (Register + MAC)
+- **Arithmetic Unit:** `npu_mac.v` (Multiplier & Adder)
+
+### 2. Finite State Machine (FSM) Design
+사용자의 `start` 신호 한 번으로 전체 연산 과정을 자동화하는 4가지 상태를 정의했습니다.
+- **IDLE (00):** 대기 상태 및 레지스터 초기화
+- **LOAD (01):** 가중치 및 입력을 PE 레지스터로 로드
+- **COMPUTE (10):** 시스톨릭 어레이를 통한 병렬 연산 및 누적
+- **DONE (11):** 연산 완료 신호(`done`) 발생 및 결과 고정
+
+### 3. Final Verification
+최종 시뮬레이션을 통해 설계의 정확성을 검증했습니다.
+![Final NPU Waveform](./images/step10_waveform.png)
+- **Dataflow:** `start` 신호에 반응하여 `state`가 순차적으로 변하는 것을 확인.
+- **Result Accuracy:** - PE0 결과: $2 \times 10 = 20$ (16진수 `14`)
+  - PE1 결과: $3 \times 10 = 30$ (16진수 `1E`)
+- **Pipelining:** 데이터 전달 지연에 따라 PE1의 연산 결과가 PE0보다 정확히 1클럭 뒤에 도출되는 파이프라인 특성을 최종 확인.
+
+---
+**Project Status: Successfully Verified & Completed.**
