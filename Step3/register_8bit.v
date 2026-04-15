@@ -1,4 +1,4 @@
-// register_8bit.v
+// Step3/register_8bit.v
 module register_8bit (
     input clk,
     input rst_n,

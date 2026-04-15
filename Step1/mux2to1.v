@@ -1,3 +1,4 @@
+// Step1/mux2to1.v
 module mux2to1 (
     input [7:0] a,    // 데이터 입력 1
     input [7:0] b,    // 데이터 입력 2

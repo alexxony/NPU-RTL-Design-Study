@@ -1,3 +1,4 @@
+// Step5/npu_alu.v
 module npu_alu (
     input clk,
     input rst_n,

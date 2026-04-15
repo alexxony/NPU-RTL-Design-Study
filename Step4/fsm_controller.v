@@ -1,3 +1,4 @@
+// Step4/fsm_controller.v
 module fsm_controller (
     input clk,
     input rst_n,
